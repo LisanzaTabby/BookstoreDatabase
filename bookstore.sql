@@ -186,10 +186,3 @@ SET
     address_3_status = CASE WHEN address_3 IS NOT NULL THEN 2 ELSE NULL END; -- Old or NULL
 SET sql_safe_updates = 1; -- Re-enable safe updates mode
 
--- Verify the updates
-SELECT 
-    customer_id,
-    address_1_status,
-    address_2_status,
-    address_3_status
-FROM customer_address;
