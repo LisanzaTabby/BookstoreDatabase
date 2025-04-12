@@ -6,7 +6,7 @@ USE bookstore;
 CREATE TABLE customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_name VARCHAR(100) NOT NULL,
-    phone VARCHAR(20),
+    phone int(20),
     email VARCHAR(100) UNIQUE,
     gender ENUM('Male','Female','Non-binary','Other')
 );
@@ -66,10 +66,10 @@ INSERT INTO country (country_code, country_name) VALUES
 -- Create the address table
 CREATE TABLE address (
     address_id INT AUTO_INCREMENT PRIMARY KEY,
-    street_number VARCHAR(20) NOT NULL,
+    street_number INT(20) NOT NULL,
     street_name VARCHAR(100) NOT NULL,
     city VARCHAR(50) NOT NULL,
-    postal_code VARCHAR(20) NOT NULL,
+    postal_code INT(20) NOT NULL,
     country_id INT NOT NULL,
     FOREIGN KEY (country_id) REFERENCES country(country_id)
 );
