@@ -1,8 +1,34 @@
 -- Creating a bookstore database
 Create database bookstore;
 -- using the bookstore database
-
 USE bookstore;
+
+-- User Roles and Groups on Bookstore database
+-- Create roles
+CREATE ROLE SalesStaff;
+CREATE ROLE DataAnalyst;
+CREATE ROLE Admin;
+-- Granting priviledges
+-- Sales staff can only read customers and book details
+GRANT SELECT ON bookstore.customers TO SalesStaff;
+GRANT SELECT ON bookstore.book TO SalesStaff;
+
+-- Data analysts can access most read-only data
+GRANT SELECT ON bookstore.* TO DataAnalyst;
+
+-- Admin can do everything
+GRANT ALL PRIVILEGES ON bookstore.* TO Admin;
+
+-- Create users and assign roles
+CREATE USER 'sales_jane'@'localhost' IDENTIFIED BY 'Password123';
+GRANT SalesStaff TO 'sales_jane'@'localhost';
+
+CREATE USER 'analyst_john'@'localhost' IDENTIFIED BY 'Password456';
+GRANT DataAnalyst TO 'analyst_john'@'localhost';
+
+CREATE USER 'admin_mary'@'localhost' IDENTIFIED BY 'AdminPass789';
+GRANT Admin TO 'admin_mary'@'localhost';
+
 
 -- creating author table
 CREATE TABLE author(
@@ -421,3 +447,30 @@ INSERT INTO orderLine (orderID, book_id, quantity, Price) VALUES
 (8, 8, 2, 1940),
 (9, 9, 1, 1050),
 (10, 10, 1, 1500);
+
+-- LIST OF ALL BOOKS THEIR PUBLISHERS & AUTHORS
+SELECT 
+    b.title, b.ISBN, b.Publication_Year, b.price,
+    CONCAT(a.first_Name, ' ', a.last_Name) AS author_name,
+    p.publisher_Name
+FROM book b
+JOIN book_author ba ON b.book_id = ba.book_id
+JOIN author a ON ba.author_id = a.author_id
+JOIN publisher p ON b.publisher_id = p.publisher_id;
+
+-- COUNT OF BOOKS PER LANGUAGE
+SELECT 
+    bl.language_name,
+    COUNT(b.book_id) AS total_books
+FROM book b
+JOIN book_language bl ON b.language_id = bl.language_id
+GROUP BY bl.language_name
+ORDER BY total_books DESC;
+
+-- TOTAL NO. OF BOOKS PUBLISHED EACH YEAR
+SELECT 
+    Publication_Year,
+    COUNT(*) AS books_published
+FROM book
+GROUP BY Publication_Year
+ORDER BY Publication_Year DESC;
