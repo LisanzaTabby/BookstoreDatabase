@@ -198,6 +198,7 @@ CREATE TABLE order_history (
     FOREIGN KEY (orderStatus_ID) REFERENCES order_Status(order_Status_ID)
         ON UPDATE CASCADE 
         ON DELETE SET NULL
+        
 );
 -- inserting Data to order_history table
 INSERT INTO order_history (orderID, orderStatus_ID, date) VALUES
