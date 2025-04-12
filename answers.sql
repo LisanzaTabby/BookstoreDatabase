@@ -93,24 +93,27 @@ CREATE TABLE book(
     Title VARCHAR(50),
     ISBN VARCHAR(50) UNIQUE,
     publisher_id INT NOT NULL,                       -- FK to publisher
-    language_id INT NOT NULL,  
+    language_id INT NOT NULL, 
+    author_id INT NOT NULL, 
     Publication_Year YEAR,
     Price DECIMAL(10,2),
+    FOREIGN KEY (author_id) REFERENCES author(author_id),
     FOREIGN KEY (publisher_id) REFERENCES publisher(publisher_id),
     FOREIGN KEY (language_id) REFERENCES book_language(language_id)
 );
 
-INSERT INTO book (title, ISBN, publisher_id, language_id, publication_year, price) VALUES
-('The Great Adventure', 1234567890, 1, 1, 2022, 19.99),
-('Journey to the Unknown', 2345678901, 2, 2, 2021, 24.99),
-('Learning to Code', 3456789012, 3, 3, 2020, 29.99),
-('The Art of Cooking', 4567890123, 4, 4, 2019, 34.99),
-('Mastering Python', 5678901234, 5, 5, 2018, 39.99),
-('The Science of Things', 6789012345, 6, 6, 2017, 44.99),
-('Exploring the Cosmos', 7890123456, 7, 7, 2016, 49.99),
-('Global Politics', 8901234567, 8, 8, 2015, 54.99),
-('Understanding History', 9012345678, 9, 9, 2014, 59.99),
-('Economics for Dummies', 1122334455, 10, 10, 2013, 64.99);
+INSERT INTO book (Title, ISBN, publisher_id, language_id, author_id, Publication_Year, Price) VALUES
+('The Great Gatsby', '9780743273565', 1, 1, 1, 1925, 15.99),
+('To Kill a Mockingbird', '9780061120084', 2, 1, 2, 1960, 12.50),
+('1984', '9780451524935', 3, 1, 3, 1949, 10.00),
+('Pride and Prejudice', '9781503290563', 4, 1, 4, 1813, 9.99),
+('The Hobbit', '9780547928227', 5, 1, 5, 1937, 14.95),
+('Harry Potter and the Sorcerer Stone', '9780590353427', 6, 1, 6, 1997, 19.99),
+('The Catcher in the Rye', '9780316769488', 7, 1, 7, 1951, 11.99),
+('The Alchemist', '9780061122415', 8, 2, 8, 1988, 13.45),
+('The Da Vinci Code', '9780307474278', 9, 1, 9, 2003, 16.99),
+('The Book Thief', '9780375842207', 10, 1, 10, 2005, 12.89);
+
 
 CREATE TABLE book_author( 
     book_id INT AUTO_INCREMENT,
