@@ -1,6 +1,7 @@
 -- Creating a bookstore database
 Create database bookstore;
 -- using the bookstore database
+
 USE bookstore;
 
 -- creating author table
@@ -23,7 +24,7 @@ INSERT INTO author (first_Name, last_Name) VALUES
 ('Hank', 'Lewis');
 -- creating book_language table
 CREATE TABLE book_language(
-    langauge_id INT AUTO_INCREMENT PRIMARY KEY,
+    language_id INT AUTO_INCREMENT PRIMARY KEY,
     language_name VARCHAR(100)
 );
 
@@ -40,37 +41,37 @@ INSERT INTO book_language (language_name) VALUES
 ('Arabic');
 
 -- creating publisher table
-CREATE TABLE publisher(
+CREATE TABLE publisher (
     Publisher_id INT AUTO_INCREMENT PRIMARY KEY,
-    publisher_Name VARCHAR (150),
-    contact_email VARCHAR (100),
-    phone INT,
-    Address INT
+    publisher_Name VARCHAR(150),
+    contact_email VARCHAR(100),
+    phone VARCHAR(20),  -- Changed from INT to VARCHAR
+    address VARCHAR(100)
 );
 
 INSERT INTO publisher (publisher_Name, contact_email, phone, address) VALUES
-('HarperCollins', 'contact@harpercollins.com', 1234567890, '123 Publisher St, NY'),
-('Penguin Books', 'contact@penguin.com', 2345678901, '456 Publisher Ave, NY'),
-('Random House', 'contact@randomhouse.com', 3456789012, '789 Publisher Blvd, NY'),
-('Simon & Schuster', 'contact@simonandschuster.com', 4567890123, '1010 Publisher Rd, NY'),
-('Hachette', 'contact@hachette.com', 5678901234, '1111 Publisher Way, NY'),
-('Macmillan', 'contact@macmillan.com', 6789012345, '1212 Publisher Dr, NY'),
-('Scholastic', 'contact@scholastic.com', 7890123456, '1313 Publisher Pkwy, NY'),
-('Pearson', 'contact@pearson.com', 8901234567, '1414 Publisher Circle, NY'),
-('Oxford University Press', 'contact@oup.com', 9012345678, '1515 Publisher Lane, NY'),
-('Wiley', 'contact@wiley.com', 1230987654, '1616 Publisher Loop, NY');
+('HarperCollins', 'contact@harpercollins.com', '1234567890', '123 Publisher St, NY'),
+('Penguin Books', 'contact@penguin.com', '2345678901', '456 Publisher Ave, NY'),
+('Random House', 'contact@randomhouse.com', '3456789012', '789 Publisher Blvd, NY'),
+('Simon & Schuster', 'contact@simonandschuster.com', '4567890123', '1010 Publisher Rd, NY'),
+('Hachette', 'contact@hachette.com', '5678901234', '1111 Publisher Way, NY'),
+('Macmillan', 'contact@macmillan.com', '6789012345', '1212 Publisher Dr, NY'),
+('Scholastic', 'contact@scholastic.com', '7890123456', '1313 Publisher Pkwy, NY'),
+('Pearson', 'contact@pearson.com', '8901234567', '1414 Publisher Circle, NY'),
+('Oxford University Press', 'contact@oup.com', '9012345678', '1515 Publisher Lane, NY'),
+('Wiley', 'contact@wiley.com', '1230987654', '1616 Publisher Loop, NY');
 
 -- creating book table
 CREATE TABLE book(
     Book_id INT AUTO_INCREMENT PRIMARY KEY,
     Title VARCHAR(50),
-    ISBN INT UNIQUE,
+    ISBN VARCHAR(50) UNIQUE,
     publisher_id INT NOT NULL,                       -- FK to publisher
     language_id INT NOT NULL,  
     Publication_Year YEAR,
     Price DECIMAL(10,2),
     FOREIGN KEY (publisher_id) REFERENCES publisher(publisher_id),
-    FOREIGN KEY (langauge_id) REFERENCES langauge_id(langauge_id)
+    FOREIGN KEY (language_id) REFERENCES book_language(language_id)
 );
 
 INSERT INTO book (title, ISBN, publisher_id, language_id, publication_year, price) VALUES
@@ -88,9 +89,9 @@ INSERT INTO book (title, ISBN, publisher_id, language_id, publication_year, pric
 CREATE TABLE book_author( 
     book_id INT AUTO_INCREMENT,
     author_id INT,
-    first_Name VARCHAR(50)
-    last_Name VARCHAR(50)
-    FOREIGN KEY (book_id) REFERENCES book(book_id)
+    first_Name VARCHAR(50),
+    last_Name VARCHAR(50),
+    FOREIGN KEY (book_id) REFERENCES book(book_id),
     FOREIGN KEY (author_id) REFERENCES author(author_id)
 );
 
@@ -110,7 +111,7 @@ INSERT INTO book_author (book_id, author_id, first_Name, last_Name) VALUES
 CREATE TABLE customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_name VARCHAR(100) NOT NULL,
-    phone int(20),
+    phone VARCHAR(30),  
     email VARCHAR(100) UNIQUE,
     gender ENUM('Male','Female','Non-binary','Other')
 );
@@ -173,7 +174,7 @@ CREATE TABLE address (
     street_number INT(20) NOT NULL,
     street_name VARCHAR(100) NOT NULL,
     city VARCHAR(50) NOT NULL,
-    postal_code INT(20) NOT NULL,
+    postal_code varchar(20) NOT NULL,
     country_id INT NOT NULL,
     FOREIGN KEY (country_id) REFERENCES country(country_id)
 );
@@ -317,10 +318,22 @@ INSERT INTO shippingmethod (methodName) VALUES
 ('International Shipping'),
 ('Next Day Shipping');
 
+-- create orderStatus table
+CREATE TABLE order_Status (
+    order_Status_ID INT PRIMARY KEY AUTO_INCREMENT,
+    statusName VARCHAR(100)
+);
+
+-- Inserting Data to orderStatus table
+INSERT INTO order_Status (statusName) VALUES
+('Pending'),
+('Shipped'),
+('Delivered');
+
 -- create customer_orders table
 CREATE TABLE customer_orders (
     orderID INT NOT NULL AUTO_INCREMENT,
-    customer_id INT NOT NULL,
+    customer_id INT NULL,
     orderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status_id INT NULL,
     shipping_Method_ID INT NULL,
@@ -353,17 +366,7 @@ INSERT INTO customer_orders (customer_ID, orderDate, status_id, shipping_Method_
 (10, '2025-04-12 10:45:00', 1, 10, 2);
 
 
--- create orderStatus table
-CREATE TABLE order_Status (
-    order_Status_ID INT PRIMARY KEY AUTO_INCREMENT,
-    statusName VARCHAR(100)
-);
 
--- Inserting Data to orderStatus table
-INSERT INTO order_Status (statusName) VALUES
-('Pending'),
-('Shipped'),
-('Delivered');
 
 -- create order_history table
 CREATE TABLE order_history (
@@ -374,12 +377,12 @@ CREATE TABLE order_history (
     FOREIGN KEY (orderID) REFERENCES customer_orders(orderID)
         ON UPDATE CASCADE 
         ON DELETE SET NULL,
-    FOREIGN KEY (orderStatus_ID) REFERENCES order_Status(order_Status_ID)
+    FOREIGN KEY (order_Status_ID) REFERENCES order_Status(order_Status_ID)
         ON UPDATE CASCADE 
         ON DELETE SET NULL
 );
 -- inserting Data to order_history table
-INSERT INTO order_history (orderID, orderStatus_ID, date) VALUES
+INSERT INTO order_history (orderID, order_Status_ID, date) VALUES
 (1, 1, NOW()),
 (2, 2, NOW()),
 (3, 3, NOW()),
@@ -390,6 +393,7 @@ INSERT INTO order_history (orderID, orderStatus_ID, date) VALUES
 (8, 3, NOW()),
 (9, 1, NOW()),
 (10, 1, NOW());
+
 -- create orderLine table (corrected 'book_ID' → 'bookID')
 CREATE TABLE orderLine (
     orderLine_ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -400,12 +404,13 @@ CREATE TABLE orderLine (
     FOREIGN KEY (orderID) REFERENCES customer_orders(orderID)
         ON UPDATE CASCADE 
         ON DELETE SET NULL,
-    FOREIGN KEY (book_id) REFERENCES books(book_id)
+    FOREIGN KEY (book_id) REFERENCES book(book_id)
         ON UPDATE CASCADE 
         ON DELETE SET NULL
 );
+
 -- inserting Data to orderLine table
-INSERT INTO orderLine (orderID, book_id, quantity, Totalprice) VALUES
+INSERT INTO orderLine (orderID, book_id, quantity, Price) VALUES
 (1, 1, 1, 1200),
 (2, 2, 2, 2000),
 (3, 3, 1, 950),
