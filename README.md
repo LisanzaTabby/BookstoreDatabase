@@ -69,5 +69,5 @@ Each role is linked to a specific user account for demonstration purposes.
 
 ---
 ## 📈ERDIAGRAM
-![alt text](erdiagram.jpeg)
+![alt text](image.png)
 
